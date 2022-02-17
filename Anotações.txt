@@ -1,0 +1,20 @@
+Dotnet
+
+Cria a base de dados
+dotnet ef database update -s .\ProEventos.API\
+
+Angular
+
+Rodar o servidor
+Front
+ng serve -o
+ng serve  
+
+Atualiza o angular
+ng update @angular/core @angular/cli
+
+Criação de componentes via linha de comando
+
+ng g c caminhoDoLocalQueSeraSalvo/nomeDoComponente --module app
+
+--module diretorio -> faz referência do componente no modulo app
