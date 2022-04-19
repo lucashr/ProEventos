@@ -35,7 +35,21 @@ export class PerfilComponent implements OnInit {
   }
 
   private carregarUsuario(): void {
-    this.accountService.getUser();
+    this.spinner.show();
+    this.accountService.getUser().subscribe(
+      (userRetorno: UserUpdate) => {
+        console.log(userRetorno);
+        this.UserUpdate = userRetorno;
+        this.form.patchValue(this.UserUpdate);
+        this.toaster.success('Usuário Carregado', 'Sucesso');
+      },
+      (error) => {
+        console.error(error);
+        this.toaster.error('Usuário não Carregado', 'Erro');
+        this.router.navigate(['/dashboard'])
+      }
+    )
+    .add(() => this.spinner.hide())
   }
 
   private validation() : void {
@@ -45,21 +59,35 @@ export class PerfilComponent implements OnInit {
     };
 
     this.form = this.fb.group({
-      titulo: ['', [Validators.required]],
+      userName: [''],
+      titulo: ['NaoInformado', [Validators.required]],
       primeiroNome: ['', Validators.required],
       ultimoNome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      telefone: ['', Validators.required],
-      funcao: ['',[Validators.required]],
+      phoneNumber: ['', Validators.required],
+      descricao: ['', Validators.required],
+      funcao: ['NaoInformado',[Validators.required]],
       password: ['',[Validators.minLength(4),  Validators.nullValidator, ]],
       confirmePassword: ['', Validators.nullValidator],
     }, formOptions);
   }
 
   onSubmit() : void {
-    if (this.form.invalid){
-      return;
-    }
+    this.AtualizarUsuario();
+  }
+
+  AtualizarUsuario() {
+    this.UserUpdate = { ...this.form.value }
+    this.spinner.show();
+
+    this.accountService.updateUser(this.UserUpdate).subscribe(
+      () => this.toaster.success('Usuário atualizado!', 'Sucesso'),
+      (error) => {
+        this.toaster.error(error.error);
+        console.error(error);
+      },
+    )
+    .add(() => this.spinner.hide())
   }
 
   resetForm(event: any): void {

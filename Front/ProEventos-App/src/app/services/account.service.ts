@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '@app/model/identity/User';
+import { UserUpdate } from '@app/model/identity/UserUpdate';
 import { environment } from '@environments/environment';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -9,10 +10,6 @@ import { map, take } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AccountService {
-
-  getUser() {
-    throw new Error('Method not implemented.');
-  }
 
   private currentUserSource = new ReplaySubject<User>(1);
   public currentUser$ = this.currentUserSource.asObservable();
@@ -30,6 +27,20 @@ export class AccountService {
         }
       })
     );
+  }
+
+  getUser(): Observable<UserUpdate> {
+    return this.http.get<UserUpdate>(this.baseUrl + 'getUser').pipe(take(1));
+  }
+
+  updateUser(model: UserUpdate): Observable<void> {
+    return this.http.put<UserUpdate>(this.baseUrl + 'updateUser', model).pipe(
+      take(1),
+        map((user: UserUpdate) => {
+          this.setCurrentUser(user);
+        }
+      )
+    )
   }
 
   public register(model: any): Observable<void> {
