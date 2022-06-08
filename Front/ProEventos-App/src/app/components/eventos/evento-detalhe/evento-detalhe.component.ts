@@ -16,7 +16,6 @@ import { EventoService } from '@app/services/evento.service';
 import { Evento } from '@app/model/Evento';
 import { Lote } from '@app/model/Lote';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ThisReceiver } from '@angular/compiler';
 import { environment } from '@environments/environment';
 
 
